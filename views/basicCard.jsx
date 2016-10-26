@@ -7,8 +7,15 @@ const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 
 export default class BasicCard extends React.Component {
+  
+  isEmpty(rule,value,callback){
+      if (!value){
+          callback();
+      }
+  }
+  
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldError, isFieldValidating } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -19,9 +26,12 @@ export default class BasicCard extends React.Component {
                 <FormItem
                     {...formItemLayout}
                     label="编号"
-                    required
                 >
-                {getFieldDecorator('ID')(
+                {getFieldDecorator('ID',{
+                    rules:[
+                        {required:true,message:"编号不能为空"},
+                    ],
+                })(
                     <Input placeholder="示例：FGW-XXX-X01" />
                 )}
                 </FormItem>
@@ -29,9 +39,12 @@ export default class BasicCard extends React.Component {
                 <FormItem
                     {...formItemLayout}
                     label="名称"
-                    required
                 >
-                {getFieldDecorator('name')(
+                {getFieldDecorator('name',{
+                    rules:[
+                        {required:true,message:"名称不能为空"},
+                    ],
+                })(
                     <Input placeholder="示例：京津冀交通优势度产品" />
                 )}
                 </FormItem>
@@ -39,7 +52,6 @@ export default class BasicCard extends React.Component {
                 <FormItem
                     {...formItemLayout}
                     label="级别"
-                    required
                 >
                 {getFieldDecorator('level', { initialValue: 'inside' })(
                     <RadioGroup >
@@ -52,9 +64,12 @@ export default class BasicCard extends React.Component {
                 <FormItem
                     {...formItemLayout}
                     label="生产时间"
-                    required
                 >
-                {getFieldDecorator('datetime')(
+                {getFieldDecorator('datetime',{
+                    rules:[
+                        {required:true,type:'object',message:"时间不能为空"},
+                    ],
+                })(
                     <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="Select Time" />
                 )}
                 </FormItem>
@@ -62,9 +77,12 @@ export default class BasicCard extends React.Component {
                 <FormItem
                     {...formItemLayout}
                     label="文件名"
-                    required
                 >
-                {getFieldDecorator('fileName')(
+                {getFieldDecorator('fileName',{
+                    rules:[
+                        {required:true,message:"文件名不能为空"},
+                    ],
+                })(
                     <Input placeholder="示例：京津冀交通优势度.tif" />
                 )}
                 </FormItem>

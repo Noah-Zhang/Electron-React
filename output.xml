@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<root>
+    <basic>
+        <ID>FGW</ID>
+        <name>adfasdf</name>
+        <level>inside</level>
+        <datetime>2016-10-26T17:24:20.114Z</datetime>
+        <fileName>webjin</fileName>
+        <SRID>EPSG:4326</SRID>
+    </basic>
+    <extend>
+        <department>jack</department>
+    </extend>
+</root>

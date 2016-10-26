@@ -11,15 +11,40 @@ const FormItem = Form.Item;
 
 let Demo = React.createClass({
 
+
+  componentWillMount(){
+    
+    ipcRenderer.sendSync('getConfig');
+    ipcRenderer.on('returnConfig', function (event, arg) {
+        console.log(arg);
+        if(arg!="notFound"){
+          message.success('获取到Config');
+          // this.setState(arg.name,arg.fileName,arg.department,arg.contact,arg.phone);
+        }
+
+      });
+  },
+
+
   handleSubmit(e) {
     e.preventDefault();
-    console.log(this.props.form.getFieldsValue().datetime.toDate());
+    
     console.log('Received values of form:', this.props.form.getFieldsValue());
-    ipcRenderer.sendSync('synchronous-message', this.props.form.getFieldsValue());
-    ipcRenderer.on('asynchronous-reply', function (event, arg) {
-      console.log(arg);
-      message.success('文件已生成');
+    
+    this.props.form.validateFields((errors,values)=>{
+      if(errors){
+        console.log('Errors in form!!!');
+        return;
+      }
+
+      ipcRenderer.sendSync('synchronous-message', this.props.form.getFieldsValue());
+      ipcRenderer.on('asynchronous-reply', function (event, arg) {
+        console.log(arg);
+        message.success('文件已生成');
+      });
+
     });
+    
   },
 
   handleReset(e) {

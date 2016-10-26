@@ -5,6 +5,7 @@ const FormItem = Form.Item;
 
 export default class ExtendCard extends React.Component {
     constructor(props) {
+        console.log(props);
         super(props);
         this.state = {
             thumbnailFileList:[],
@@ -23,10 +24,9 @@ export default class ExtendCard extends React.Component {
         console.log(this.state);
     }
 
-
     
     render() {
-        const { getFieldDecorator } = this.props.form;
+        const { getFieldDecorator, getFieldError, isFieldValidating } = this.props.form;
 
         const formItemLayout = {
         labelCol: { span: 6 },
@@ -43,9 +43,12 @@ export default class ExtendCard extends React.Component {
                     <FormItem
                         {...formItemLayout}
                         label="部门"
-                        required
                     >
-                    {getFieldDecorator('department')(
+                    {getFieldDecorator('department',{
+                    rules:[
+                        {required:true,message:"部门不能为空"},
+                    ],
+                })(
                         <Select
                             showSearch
                             style={{ width: 200 }}
@@ -62,9 +65,12 @@ export default class ExtendCard extends React.Component {
                     <FormItem
                         {...formItemLayout}
                         label="联系人"
-                        required
                     >
-                    {getFieldDecorator('contact')(
+                    {getFieldDecorator('contact',{
+                    rules:[
+                        {required:true,message:"联系人不能为空"},
+                    ],
+                })(
                         <Input placeholder="" />
                     )}
                     </FormItem>
@@ -74,15 +80,18 @@ export default class ExtendCard extends React.Component {
                         label="联系电话"
                         required
                     >
-                    {getFieldDecorator('phone')(
                         <Input.Group className="ant-search-input">
-                            <Input placeholder="" />
+                            {getFieldDecorator('phone',{
+                                rules:[{required:true,message:"联系电话不能为空"}],
+                            })(
+                                <Input placeholder="" />
+                            )}
                             <div className="ant-input-group-wrap">
                                 <Button icon="phone" className="ant-search-btn" />
                             </div>
                         </Input.Group>
-                    )}
                     </FormItem>
+
 
                     <FormItem
                         {...formItemLayout}
@@ -105,7 +114,7 @@ export default class ExtendCard extends React.Component {
                             fileList={this.state.thumbnailFileList}
                         >
                             <Button type="ghost">
-                                <Icon type="upload" /> 上传
+                                <Icon type="upload" /> 选择
                             </Button>
                         </Upload>
                     )}
@@ -121,7 +130,7 @@ export default class ExtendCard extends React.Component {
                             className="avatar-uploader"
                         >
                             <Button type="ghost">
-                                <Icon type="upload" /> 上传
+                                <Icon type="upload" /> 选择
                             </Button>
                         </Upload>
                     )}

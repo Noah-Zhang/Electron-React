@@ -5,6 +5,7 @@ const os = require('os');
 const fs = require('fs');
 
 
+
 let mainWindow = null;
 
 app.on('window-all-closed', () => {
@@ -14,14 +15,34 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({width: 940, height: 650});
+  mainWindow = new BrowserWindow({width: 940, height: 630,autoHideMenuBar:true});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 });
 
+//获取配置文件
+ipcMain.on('getConfig', function (event, arg) {
 
+
+  fs.readFile('./config.json', function(err,data){
+    if (err){
+      event.returnValue = "404";
+      event.sender.send('returnConfig', "notFound");
+    }else{
+      let jsonObj=JSON.parse(data);
+      event.returnValue = "200";
+      event.sender.send('returnConfig', jsonObj);
+    }
+  });
+
+  
+});
+
+
+
+//写入XML文件
 ipcMain.on('synchronous-message', function (event, arg) {
 
   var xw = new XMLWriter(true);
@@ -83,8 +104,19 @@ ipcMain.on('synchronous-message', function (event, arg) {
 
   xw.endElement('root');
   xw.endDocument();
+  fs.writeFile("output.xml",xw.toString());
 
-  fs.writeFile("output.txt",xw.toString());
+
+  //保存此次配置文件
+  let config = {
+    'name':arg.name,
+    'fileName':arg.fileName,
+    'department':arg.department,
+    'contact':arg.contact,
+    'phone':arg.phone
+  };
+  fs.writeFile("config.json",JSON.stringify(config));
+
 
   event.returnValue = "200";
   event.sender.send('asynchronous-reply', '200')
