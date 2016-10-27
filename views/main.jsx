@@ -10,34 +10,47 @@ const ipcRenderer = require('electron').ipcRenderer;
 const FormItem = Form.Item;
 
 let Demo = React.createClass({
-
+  
+  getInitialState(){
+    return ({
+      'theme':'',
+      'level':'',
+      'SRID':'',
+      'department':'',
+      'contact':'',
+      'phone':'',
+    });
+  },
 
   componentDidMount(){
-    
     ipcRenderer.sendSync('getConfig');
     ipcRenderer.on('returnConfig', function (event, arg) {
-        console.log(arg);
         if(arg!="notFound"){
-          message.success('获取到Config');
-          // this.setState(arg.name,arg.fileName,arg.department,arg.contact,arg.phone);
+          message.success('自动填充上次配置');
+          this.setState({
+            'theme':arg.theme,
+            'level':arg.level,
+            'SRID':arg.SRID,
+            'department':arg.department,
+            'contact':arg.contact,
+            'phone':arg.phone,
+          });
         }
-
-      });
+      }.bind(this));
   },
 
 
   handleSubmit(e) {
+    var fieldsValues= this.props.form.getFieldsValue();
     e.preventDefault();
-    
-    console.log('Received values of form:', this.props.form.getFieldsValue());
-    
+    console.log('Received values of form:', fieldsValues);
     this.props.form.validateFields((errors,values)=>{
       if(errors){
         console.log('Errors in form!!!');
         return;
       }
 
-      ipcRenderer.sendSync('synchronous-message', this.props.form.getFieldsValue());
+      ipcRenderer.sendSync('synchronous-message', fieldsValues);
       ipcRenderer.on('asynchronous-reply', function (event, arg) {
         console.log(arg);
         message.success('文件已生成');
@@ -60,8 +73,8 @@ let Demo = React.createClass({
       <div>
         <Form horizontal onSubmit={this.handleSubmit}>
           <div className="clearfix">
-            <BasicCard {...this.props}/>
-            <ExtendCard {...this.props}/>
+            <BasicCard {...this.props} config={this.state}/>
+            <ExtendCard {...this.props} config={this.state}/>
           </div>
           <FormItem style={{float:'right',marginRight:'40px',marginTop:'20px'}}>
             <Button type="primary" htmlType="submit" size="large"  style={{ marginRight: 8 }}>生成</Button>

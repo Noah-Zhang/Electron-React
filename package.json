@@ -1,5 +1,5 @@
 {
-  "name": "electron-es6-react",
+  "name": "beta",
   "version": "0.1.0",
   "main": "main.js",
   "license": "MIT",
@@ -19,7 +19,8 @@
     "xml-writer": "^1.6.0"
   },
   "devDependencies": {
+    "antd": "^2.1.0",
     "electron": "^1.4.3",
-    "antd": "^2.1.0"
+    "electron-packager": "^8.1.0"
   }
 }

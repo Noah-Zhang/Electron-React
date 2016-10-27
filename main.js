@@ -28,7 +28,6 @@ app.on('ready', () => {
 //获取配置文件
 ipcMain.on('getConfig', function (event, arg) {
 
-
   fs.readFile('./config.json', function(err,data){
     if (err){
       event.returnValue = "404";
@@ -40,7 +39,6 @@ ipcMain.on('getConfig', function (event, arg) {
     }
   });
 
-  
 });
 
 
@@ -52,9 +50,9 @@ ipcMain.on('synchronous-message', function (event, arg) {
   xw.startDocument();
   xw.startElement('root');
     xw.startElement('basic');
-      xw.startElement('ID');
-      xw.text(arg.ID);
-      xw.endElement('ID');
+      xw.startElement('theme');
+      xw.text(arg.theme);
+      xw.endElement('theme');
 
       xw.startElement('name');
       xw.text(arg.name);
@@ -68,9 +66,12 @@ ipcMain.on('synchronous-message', function (event, arg) {
       xw.text(arg.datetime._d);
       xw.endElement('datetime');
 
-      xw.startElement('fileName');
-      xw.text(arg.fileName);
-      xw.endElement('fileName');
+      let countFileName = arg.fileName.fileList.length;
+      for(var i=0;i<countFileName;i++){
+        xw.startElement('fileName');
+        xw.text(arg.fileName.fileList[i].name);
+        xw.endElement('fileName');
+      }
 
       xw.startElement('SRID');
       xw.text(arg.SRID);
@@ -83,40 +84,54 @@ ipcMain.on('synchronous-message', function (event, arg) {
       xw.text(arg.department);
       xw.endElement('department');
 
-    //   xw.startElement('contact');
-    //   xw.text(arg.contact);
-    //   xw.endElement('contact');
+      xw.startElement('contact');
+      xw.text(arg.contact);
+      xw.endElement('contact');
 
-    //   xw.startElement('phone');
-    //   xw.text(arg.phone);
-    //   xw.endElement('phone');
+      xw.startElement('phone');
+      xw.text(arg.phone);
+      xw.endElement('phone');
 
-    //   xw.startElement('description');
-    //   xw.text(arg.description);
-    //   xw.endElement('description');
+      if(arg.description){
+        xw.startElement('description');
+        xw.text(arg.description);
+        xw.endElement('description');
+      }
 
-    //   xw.startElement('thumbnail');
-    //   xw.text(arg.thumbnail);
-    //   xw.endElement('thumbnail');
 
-    //   xw.startElement('picture');
-    //   xw.text(arg.picture);
-    //   xw.endElement('picture');
+      if(arg.thumbnail){
+        let countThumbnail = arg.thumbnail.fileList.length;
+        for(var i=0;i<countThumbnail;i++){
+          xw.startElement('thumbnail');
+          xw.text(arg.thumbnail.fileList[i].name);
+          xw.endElement('thumbnail');
+        }
+      }
+      if(arg.picture){
+        let countPicture = arg.picture.fileList.length;
+        for(var i=0;i<countPicture;i++){
+          xw.startElement('picture');
+          xw.text(arg.picture.fileList[i].name);
+          xw.endElement('picture');
+        }
+      }
 
-    // xw.endElement('extend');
+
+    xw.endElement('extend');
 
   xw.endElement('root');
   xw.endDocument();
-  fs.writeFile("output.xml",xw.toString());
+  fs.writeFile(arg.name+".xml",xw.toString());
 
 
   //保存此次配置文件
   let config = {
-    'name':arg.name,
-    'fileName':arg.fileName,
+    'theme':arg.theme,
+    'level':arg.level,
+    'SRID':arg.SRID,
     'department':arg.department,
     'contact':arg.contact,
-    'phone':arg.phone
+    'phone':arg.phone,
   };
   fs.writeFile("config.json",JSON.stringify(config));
 
