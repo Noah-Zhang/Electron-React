@@ -1,8 +1,11 @@
-import { app, BrowserWindow,ipcMain } from 'electron';
-
-var XMLWriter = require('xml-writer');
+const electron = require('electron');
+const XMLWriter = require('xml-writer');
 const os = require('os');
 const fs = require('fs');
+
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
 
 
 

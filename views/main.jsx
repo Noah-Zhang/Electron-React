@@ -12,7 +12,7 @@ const FormItem = Form.Item;
 let Demo = React.createClass({
 
 
-  componentWillMount(){
+  componentDidMount(){
     
     ipcRenderer.sendSync('getConfig');
     ipcRenderer.on('returnConfig', function (event, arg) {
