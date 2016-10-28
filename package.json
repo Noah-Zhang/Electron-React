@@ -1,11 +1,12 @@
 {
-  "name": "beta",
+  "name": "xmltool",
   "version": "0.1.0",
   "main": "main.js",
   "license": "MIT",
   "repository": "b52/electron-es6-react",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package": "electron-packager ./ xmltool --win --out eletron-package-exe --arch=x64 --version 1.4.4 --overwrite --icon=./img/icon.ico --ignore=node_modules --version-string.CompanyNAme=IECAS --version-string.ProductName=影像专题产品规范描述生成工具beta"
   },
   "dependencies": {
     "babel-loader": "^6.2.5",

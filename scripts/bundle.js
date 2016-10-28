@@ -21219,6 +21219,8 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -21247,31 +21249,43 @@
 
 	var Demo = _react2.default.createClass({
 	  displayName: 'Demo',
+	  getInitialState: function getInitialState() {
+	    return {
+	      'theme': '',
+	      'level': '',
+	      'SRID': '',
+	      'department': '',
+	      'contact': '',
+	      'phone': ''
+	    };
+	  },
 	  componentDidMount: function componentDidMount() {
-
 	    ipcRenderer.sendSync('getConfig');
 	    ipcRenderer.on('returnConfig', function (event, arg) {
-	      console.log(arg);
 	      if (arg != "notFound") {
-	        _antd.message.success('获取到Config');
-	        // this.setState(arg.name,arg.fileName,arg.department,arg.contact,arg.phone);
+	        _antd.message.success('自动填充上次配置');
+	        this.setState({
+	          'theme': arg.theme,
+	          'level': arg.level,
+	          'SRID': arg.SRID,
+	          'department': arg.department,
+	          'contact': arg.contact,
+	          'phone': arg.phone
+	        });
 	      }
-	    });
+	    }.bind(this));
 	  },
 	  handleSubmit: function handleSubmit(e) {
-	    var _this = this;
-
+	    var fieldsValues = this.props.form.getFieldsValue();
 	    e.preventDefault();
-
-	    console.log('Received values of form:', this.props.form.getFieldsValue());
-
+	    console.log('Received values of form:', fieldsValues);
 	    this.props.form.validateFields(function (errors, values) {
 	      if (errors) {
 	        console.log('Errors in form!!!');
 	        return;
 	      }
 
-	      ipcRenderer.sendSync('synchronous-message', _this.props.form.getFieldsValue());
+	      ipcRenderer.sendSync('synchronous-message', fieldsValues);
 	      ipcRenderer.on('asynchronous-reply', function (event, arg) {
 	        console.log(arg);
 	        _antd.message.success('文件已生成');
@@ -21295,8 +21309,8 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'clearfix' },
-	          _react2.default.createElement(_basicCard2.default, this.props),
-	          _react2.default.createElement(_extendCard2.default, this.props)
+	          _react2.default.createElement(_basicCard2.default, _extends({}, this.props, { config: this.state })),
+	          _react2.default.createElement(_extendCard2.default, _extends({}, this.props, { config: this.state }))
 	        ),
 	        _react2.default.createElement(
 	          FormItem,
@@ -28095,6 +28109,8 @@
 /* 173 */
 /***/ function(module, exports) {
 
+	"use strict";
+
 	module.exports = function (module) {
 		if (!module.webpackPolyfill) {
 			module.deprecate = function () {};
@@ -28175,11 +28191,11 @@
 	                    _react2.default.createElement(
 	                        FormItem,
 	                        _extends({}, formItemLayout, {
-	                            label: '\u7F16\u53F7'
+	                            label: '\u4E13\u9898\u540D'
 	                        }),
-	                        getFieldDecorator('ID', {
-	                            rules: [{ required: true, message: "编号不能为空" }]
-	                        })(_react2.default.createElement(_antd.Input, { placeholder: '\u793A\u4F8B\uFF1AFGW-XXX-X01' }))
+	                        getFieldDecorator('theme', {
+	                            rules: [{ required: true, message: "专题名不能为空" }]
+	                        })(_react2.default.createElement(_antd.Input, { placeholder: '\u793A\u4F8B\uFF1AXXX\u4E13\u9898' }))
 	                    ),
 	                    _react2.default.createElement(
 	                        FormItem,
@@ -28195,18 +28211,20 @@
 	                        _extends({}, formItemLayout, {
 	                            label: '\u7EA7\u522B'
 	                        }),
-	                        getFieldDecorator('level', { initialValue: 'inside' })(_react2.default.createElement(
+	                        getFieldDecorator('level', {
+	                            rules: [{ required: true, message: "级别不能为空" }]
+	                        })(_react2.default.createElement(
 	                            RadioGroup,
 	                            null,
 	                            _react2.default.createElement(
 	                                _antd.Radio,
-	                                { value: 'inside' },
+	                                { value: 'private' },
 	                                '\u5185\u90E8'
 	                            ),
 	                            _react2.default.createElement(
 	                                _antd.Radio,
-	                                { value: 'outsides' },
-	                                '\u5916\u90E8'
+	                                { value: 'public' },
+	                                '\u516C\u5F00'
 	                            )
 	                        ))
 	                    ),
@@ -28222,11 +28240,22 @@
 	                    _react2.default.createElement(
 	                        FormItem,
 	                        _extends({}, formItemLayout, {
-	                            label: '\u6587\u4EF6\u540D'
+	                            label: '\u5F71\u50CF\u6587\u4EF6\u540D'
 	                        }),
 	                        getFieldDecorator('fileName', {
-	                            rules: [{ required: true, message: "文件名不能为空" }]
-	                        })(_react2.default.createElement(_antd.Input, { placeholder: '\u793A\u4F8B\uFF1A\u4EAC\u6D25\u5180\u4EA4\u901A\u4F18\u52BF\u5EA6.tif' }))
+	                            rules: [{ required: true, type: 'object', message: "影像文件不能为空" }]
+	                        })(_react2.default.createElement(
+	                            _antd.Upload,
+	                            {
+	                                className: 'avatar-uploader'
+	                            },
+	                            _react2.default.createElement(
+	                                _antd.Button,
+	                                { type: 'ghost' },
+	                                _react2.default.createElement(_antd.Icon, { type: 'upload' }),
+	                                ' \u9009\u62E9'
+	                            )
+	                        ))
 	                    ),
 	                    _react2.default.createElement(
 	                        FormItem,
@@ -28234,7 +28263,9 @@
 	                            label: '\u5750\u6807\u6295\u5F71',
 	                            required: true
 	                        }),
-	                        getFieldDecorator('SRID', { initialValue: 'EPSG:4326' })(_react2.default.createElement(
+	                        getFieldDecorator('SRID', {
+	                            rules: [{ required: true, message: "投影坐标不能为空" }]
+	                        })(_react2.default.createElement(
 	                            RadioGroup,
 	                            null,
 	                            _react2.default.createElement(
@@ -28295,28 +28326,50 @@
 	    function ExtendCard(props) {
 	        _classCallCheck(this, ExtendCard);
 
-	        console.log(props);
-
 	        var _this = _possibleConstructorReturn(this, (ExtendCard.__proto__ || Object.getPrototypeOf(ExtendCard)).call(this, props));
+	        //console.log(props);
+
 
 	        _this.state = {
 	            thumbnailFileList: [],
-
-	            thumbnailPath: ''
-
+	            thumbnailPath: '',
+	            isFirst: true
 	        };
-
 	        return _this;
 	    }
 
 	    _createClass(ExtendCard, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            var config = nextProps.config,
+	                form = nextProps.form;
+
+	            console.log(config);
+	            if (this.state.isFirst) {
+	                form.setFieldsValue(config);
+	                this.setState({
+	                    isFirst: false
+	                });
+	            }
+	        }
+	    }, {
 	        key: 'handleThumbnailChange',
 	        value: function handleThumbnailChange(info) {
-	            console.log(info);
+	            //console.log(info);
 	            var thumbnailFileList = info.fileList.slice(-1);
 	            var thumbnailPath = info.file.name;
 	            this.setState({ thumbnailFileList: thumbnailFileList, thumbnailPath: thumbnailPath });
 	            console.log(this.state);
+	        }
+	    }, {
+	        key: 'checkPhone',
+	        value: function checkPhone(rule, value, callback) {
+
+	            if (isNaN(value)) {
+	                callback([new Error('号码必须为数字')]);
+	            } else {
+	                callback();
+	            }
 	        }
 	    }, {
 	        key: 'render',
@@ -28348,35 +28401,13 @@
 	                        }),
 	                        getFieldDecorator('department', {
 	                            rules: [{ required: true, message: "部门不能为空" }]
-	                        })(_react2.default.createElement(
-	                            _antd.Select,
-	                            {
-	                                showSearch: true,
-	                                style: { width: 200 },
-	                                placeholder: '\u9009\u62E9\u90E8\u95E8',
-	                                notFoundContent: ''
-	                            },
-	                            _react2.default.createElement(
-	                                Option,
-	                                { value: 'jack' },
-	                                '\u53D1\u6539\u59D4'
-	                            ),
-	                            _react2.default.createElement(
-	                                Option,
-	                                { value: 'lucy' },
-	                                '\u4F4F\u5EFA\u90E8'
-	                            ),
-	                            _react2.default.createElement(
-	                                Option,
-	                                { value: 'tom' },
-	                                '\u6559\u80B2\u90E8'
-	                            )
-	                        ))
+	                        })(_react2.default.createElement(_antd.Input, { placeholder: '' }))
 	                    ),
 	                    _react2.default.createElement(
 	                        FormItem,
 	                        _extends({}, formItemLayout, {
 	                            label: '\u8054\u7CFB\u4EBA'
+
 	                        }),
 	                        getFieldDecorator('contact', {
 	                            rules: [{ required: true, message: "联系人不能为空" }]
@@ -28386,20 +28417,11 @@
 	                        FormItem,
 	                        _extends({}, formItemLayout, {
 	                            label: '\u8054\u7CFB\u7535\u8BDD',
-	                            required: true
+	                            help: isFieldValidating('phone') ? 'validating...' : (getFieldError('phone') || []).join(', ')
 	                        }),
-	                        _react2.default.createElement(
-	                            _antd.Input.Group,
-	                            { className: 'ant-search-input' },
-	                            getFieldDecorator('phone', {
-	                                rules: [{ required: true, message: "联系电话不能为空" }]
-	                            })(_react2.default.createElement(_antd.Input, { placeholder: '' })),
-	                            _react2.default.createElement(
-	                                'div',
-	                                { className: 'ant-input-group-wrap' },
-	                                _react2.default.createElement(_antd.Button, { icon: 'phone', className: 'ant-search-btn' })
-	                            )
-	                        )
+	                        getFieldDecorator('phone', {
+	                            rules: [{ required: true, message: "联系电话不能为空" }, { validator: this.checkPhone }]
+	                        })(_react2.default.createElement(_antd.Input, { placeholder: '' }))
 	                    ),
 	                    _react2.default.createElement(
 	                        FormItem,

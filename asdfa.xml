@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<root>
+    <basic>
+        <theme>dfa</theme>
+        <name>asdfa</name>
+        <level>private</level>
+        <datetime>2016-10-28T14:10:58.550Z</datetime>
+        <fileName>mailu.dll</fileName>
+        <SRID>EPSG:4326</SRID>
+    </basic>
+    <extend>
+        <department>123</department>
+        <contact>13</contact>
+        <phone>12312</phone>
+    </extend>
+</root>
