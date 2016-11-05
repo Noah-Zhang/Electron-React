@@ -83,9 +83,6 @@ let Demo = React.createClass({
             </Popconfirm>
           </FormItem>
         </Form>
-        <div style={{float:'left',marginLeft:'20px',marginTop:'70px'}}>
-          &copy;copyright 中国科学院电子学研究所苏州研究院
-        </div>
       </div>
     );
   },

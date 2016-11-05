@@ -22,17 +22,17 @@ export default class BasicCard extends React.Component {
     };
     return (
         <div style={{ padding: '20px', width:'450px',height:'492px',float:'left'}}>
-            <Card title="基本属性" bordered={false} style={{height:'452px'}}>
+            <Card title="XXX1" bordered={false} style={{height:'452px'}}>
                 <FormItem
                     {...formItemLayout}
-                    label="专题名"
+                    label="XX"
                 >
                 {getFieldDecorator('theme',{
                     rules:[
-                        {required:true,message:"专题名不能为空"},
+                        {required:true,message:"不能为空"},
                     ],
                 })(
-                    <Input placeholder="示例：XXX专题" />
+                    <Input placeholder="" />
                 )}
                 </FormItem>
 
@@ -45,7 +45,7 @@ export default class BasicCard extends React.Component {
                         {required:true,message:"名称不能为空"},
                     ],
                 })(
-                    <Input placeholder="示例：京津冀交通优势度产品" />
+                    <Input placeholder="示例：XXX" />
                 )}
                 </FormItem>
 
@@ -59,15 +59,15 @@ export default class BasicCard extends React.Component {
                     ],
                 })(
                     <RadioGroup >
-                        <Radio value="private">内部</Radio>
-                        <Radio value="public">公开</Radio>
+                        <Radio value="private">Private</Radio>
+                        <Radio value="public">Public</Radio>
                     </RadioGroup>
                 )}
                 </FormItem>
 
                 <FormItem
                     {...formItemLayout}
-                    label="生产时间"
+                    label="时间"
                 >
                 {getFieldDecorator('datetime',{
                     rules:[
@@ -80,11 +80,11 @@ export default class BasicCard extends React.Component {
 
                 <FormItem
                     {...formItemLayout}
-                    label="影像文件名"
+                    label="文件名"
                 >
                 {getFieldDecorator('fileName',{
                     rules:[
-                        {required:true,type:'object',message:"影像文件不能为空"},
+                        {required:true,type:'object',message:"文件不能为空"},
                     ],
                 })(
                     <Upload
@@ -99,17 +99,17 @@ export default class BasicCard extends React.Component {
 
                 <FormItem
                     {...formItemLayout}
-                    label="坐标投影"
+                    label="性别"
                     required
                 >
-                {getFieldDecorator('SRID',{
+                {getFieldDecorator('sex',{
                     rules:[
-                        {required:true,message:"投影坐标不能为空"},
+                        {required:true,message:"不能为空"},
                     ],
                 })(
                     <RadioGroup>
-                        <Radio value="EPSG:4326">EPSG:4326</Radio>
-                        <Radio value="EPSG:900913">EPSG:900913</Radio>
+                        <Radio value="male">male</Radio>
+                        <Radio value="female">female</Radio>
                     </RadioGroup>
                 )}
                 </FormItem>

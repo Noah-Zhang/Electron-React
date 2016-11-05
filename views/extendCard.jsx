@@ -56,14 +56,14 @@ export default class ExtendCard extends React.Component {
 
         return (
             <div style={{ padding: '20px', width: '450px', float: 'left' }}>
-                <Card title="扩展描述" bordered={false} >
+                <Card title="XXX2" bordered={false} >
                     <FormItem
                         {...formItemLayout}
-                        label="部门"
+                        label="XX"
                         >
                         {getFieldDecorator('department', {
                             rules: [
-                                { required: true, message: "部门不能为空" },
+                                { required: true, message: "XX不能为空" },
                             ],
                         })(
                             <Input placeholder="" />
